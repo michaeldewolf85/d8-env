@@ -1,0 +1,3 @@
+# Ignore Vagrant session storage.
+.vagrant
+
