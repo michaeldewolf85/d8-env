@@ -16,9 +16,9 @@ DOCROOT=$2
 export DEBIAN_FRONTEND=noninteractive
 
 # Fetch software dependencies.
+add-apt-repository ppa:ondrej/php5-5.6
 apt-get update
-sudo add-apt-repository ppa:ondrej/php5-5.6
-apt-get install -y nginx mysql-server php5-fpm php5-mysql php5-cli
+apt-get install -y nginx mysql-server php5-fpm php5-mysql php5-cli php5-gd
 
 # Configure nginx virtual host for hostname via http and https.
 mkdir -p /var/www
@@ -42,5 +42,5 @@ mv /home/vagrant/composer.phar /usr/local/bin/composer
 su - vagrant -c 'composer global require drush/drush:dev-master'
 echo 'export PATH="$HOME/.composer/vendor/bin:$PATH"' >> /home/vagrant/.bashrc
 
-mysql -uroot -e "create database $HOSTNAME;"
+mysql -uroot -e 'create database d8;'
 
