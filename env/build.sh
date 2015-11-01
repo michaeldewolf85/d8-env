@@ -17,7 +17,7 @@ export DEBIAN_FRONTEND=noninteractive
 
 # Fetch software dependencies.
 apt-get update
-apt-get install -y nginx mysql-server php5-fpm php5-mysql
+apt-get install -y nginx mysql-server php5-fpm php5-mysql php5-cli
 
 # Configure nginx virtual host for hostname via http and https.
 mkdir -p /var/www
@@ -25,8 +25,8 @@ ln -s "/vagrant$DOCROOT" "/var/www/$HOSTNAME"
 cp /etc/nginx/sites-available/default "/etc/nginx/sites-available/$HOSTNAME"
 sed -i "s/root.*;/root \/var\/www\/$HOSTNAME;/g" "/etc/nginx/sites-available/$HOSTNAME"
 sed -i "s/server_name.*;/server_name $HOSTNAME;/g" "/etc/nginx/sites-available/$HOSTNAME"
-sed -i 's/^(?!_)index.*;/index index.php index.html index.htm;/g' "/etc/nginx/sites-available/$HOSTNAME"
-sed -i '/# pass the PHP/,/#\}/{/\(# pass the PHP\|#fastcgi_pass 127\)/b a;s/# *//; :a}' "/etc/nginx/sites-available/$HOSTNAME"
+sed -i 's/[^\_]index.*;/index index.php index.html index.htm;/g' "/etc/nginx/sites-available/$HOSTNAME"
+sed -i '/# pass the PHP/,/#\}/{/\(# pass the PHP\|#\tfastcgi_pass 127\)/b a;s/# *//; :a}' "/etc/nginx/sites-available/$HOSTNAME"
 openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/nginx/cert.key -out /etc/nginx/cert.pem -subj "/C=US/ST=Massachusetts/L=Cambridge/O=Third and Grove/OU=Engineering/CN=$HOSTNAME"
 sed -i '/^# HTTPS server/,/#\}/{/^# HTTPS server/b a;s/^# *//; :a}' "/etc/nginx/sites-available/$HOSTNAME"
 ln -s "/etc/nginx/sites-available/$HOSTNAME" "/etc/nginx/sites-enabled/$HOSTNAME"
