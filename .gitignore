@@ -1,3 +1,5 @@
 # Ignore Vagrant session storage.
 .vagrant
 
+# Ignore site specific settings.
+env/settings.yaml
