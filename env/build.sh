@@ -17,6 +17,7 @@ export DEBIAN_FRONTEND=noninteractive
 
 # Fetch software dependencies.
 apt-get update
+sudo add-apt-repository ppa:ondrej/php5-5.6
 apt-get install -y nginx mysql-server php5-fpm php5-mysql php5-cli
 
 # Configure nginx virtual host for hostname via http and https.
@@ -32,9 +33,14 @@ sed -i '/^# HTTPS server/,/#\}/{/^# HTTPS server/b a;s/^# *//; :a}' "/etc/nginx/
 ln -s "/etc/nginx/sites-available/$HOSTNAME" "/etc/nginx/sites-enabled/$HOSTNAME"
 rm /etc/nginx/sites-enabled/default
 chown -R www-data:www-data "/var/www/$HOSTNAME"
+sudo usermod -a -G vagrant www-data
+service php5-fpm restart
 service nginx restart
 
 curl -sS https://getcomposer.org/installer | php
 mv /home/vagrant/composer.phar /usr/local/bin/composer
 su - vagrant -c 'composer global require drush/drush:dev-master'
 echo 'export PATH="$HOME/.composer/vendor/bin:$PATH"' >> /home/vagrant/.bashrc
+
+mysql -uroot -e "create database $HOSTNAME;"
+
